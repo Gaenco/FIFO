@@ -1,10 +1,6 @@
-// Array para almacenar los procesos
 let procesos = [];
-
-// Colores para el diagrama de Gantt
 const colores = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE'];
 
-// Función para manejar Enter y pasar al siguiente campo
 function manejarEnter(event, siguienteCampoId) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -12,7 +8,6 @@ function manejarEnter(event, siguienteCampoId) {
     }
 }
 
-// Función para manejar Enter en el último campo y agregar proceso
 function manejarEnterAgregar(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -20,19 +15,16 @@ function manejarEnterAgregar(event) {
     }
 }
 
-// Función para agregar un proceso
 function agregarProceso() {
     const id = document.getElementById('processId').value;
     const llegada = parseInt(document.getElementById('arrivalTime').value);
     const rafaga = parseInt(document.getElementById('burstTime').value);
 
-    // Validar entrada
     if (!id || isNaN(llegada) || isNaN(rafaga) || rafaga <= 0) {
         alert('Por favor completa todos los campos correctamente');
         return;
     }
 
-    // Crear proceso
     const proceso = {
         id: id,
         tiempoLlegada: llegada,
@@ -46,24 +38,19 @@ function agregarProceso() {
     procesos.push(proceso);
     mostrarProcesos();
     limpiarFormulario();
-    
-    // Enfocar el primer campo para agregar otro proceso rápidamente
     document.getElementById('processId').focus();
 }
 
-// Función para eliminar un proceso
 function eliminarProceso(index) {
     procesos.splice(index, 1);
     mostrarProcesos();
     
-    // Limpiar resultados si no hay procesos
     if (procesos.length === 0) {
         document.getElementById('ganttChart').innerHTML = '';
         document.getElementById('metrics').innerHTML = '';
     }
 }
 
-// Función para mostrar procesos en tabla
 function mostrarProcesos() {
     const tabla = document.getElementById('processTable');
     
@@ -94,45 +81,31 @@ function mostrarProcesos() {
     tabla.innerHTML = html;
 }
 
-// Función principal: Calcular FIFO
 function calcularFIFO() {
     if (procesos.length === 0) {
         alert('Agrega al menos un proceso');
         return;
     }
 
-    // 1. Ordenar por tiempo de llegada (FIFO)
     procesos.sort((a, b) => a.tiempoLlegada - b.tiempoLlegada);
-
-    // 2. Calcular tiempos para cada proceso
     let tiempoActual = 0;
     
     procesos.forEach(proceso => {
-        // Si el proceso llega después, ajustar tiempo actual
         if (tiempoActual < proceso.tiempoLlegada) {
             tiempoActual = proceso.tiempoLlegada;
         }
 
-        // Calcular tiempo de espera
         proceso.tiempoEspera = tiempoActual - proceso.tiempoLlegada;
-
-        // Ejecutar el proceso
         tiempoActual += proceso.tiempoRafaga;
-
-        // Calcular tiempo de finalización
         proceso.tiempoFinalizacion = tiempoActual;
-
-        // Calcular tiempo de retorno
         proceso.tiempoRetorno = proceso.tiempoFinalizacion - proceso.tiempoLlegada;
     });
 
-    // 3. Mostrar resultados
     mostrarProcesos();
     mostrarGantt();
     mostrarMetricas();
 }
 
-// Función para mostrar diagrama de Gantt
 function mostrarGantt() {
     const gantt = document.getElementById('ganttChart');
     let html = '<div style="display: flex; align-items: center; margin: 20px 0;">';
@@ -140,7 +113,7 @@ function mostrarGantt() {
     let tiempoInicio = 0;
     procesos.forEach(proceso => {
         const inicio = Math.max(tiempoInicio, proceso.tiempoLlegada);
-        const ancho = proceso.tiempoRafaga * 50; // 50px por unidad de tiempo
+        const ancho = proceso.tiempoRafaga * 50; 
 
         html += `<div class="gantt-bar" style="width: ${ancho}px; background: ${proceso.color}">`;
         html += `${proceso.id}<br>[${inicio}-${proceso.tiempoFinalizacion}]`;
@@ -153,7 +126,6 @@ function mostrarGantt() {
     gantt.innerHTML = html;
 }
 
-// Función para mostrar métricas
 function mostrarMetricas() {
     const metricas = document.getElementById('metrics');
     
@@ -177,14 +149,12 @@ function mostrarMetricas() {
     metricas.innerHTML = html;
 }
 
-// Función para limpiar formulario
 function limpiarFormulario() {
     document.getElementById('processId').value = '';
     document.getElementById('arrivalTime').value = '';
     document.getElementById('burstTime').value = '';
 }
 
-// Función para limpiar todo
 function limpiar() {
     procesos = [];
     document.getElementById('processTable').innerHTML = '';
