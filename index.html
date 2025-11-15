@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmo FIFO - Planificación de Procesos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Algoritmo FIFO (First In, First Out)</h1>
+        <p class="subtitle">Sistemas Operativos</p>
+        
+        <!-- Formulario de entrada -->
+        <div class="input-section">
+            <h2>Agregar Proceso</h2>
+            <div class="form-group">
+                <label>ID del Proceso:</label>
+                <input type="text" id="processId" placeholder="P1" onkeypress="manejarEnter(event, 'arrivalTime')">
+            </div>
+            <div class="form-group">
+                <label>Tiempo de Llegada:</label>
+                <input type="number" id="arrivalTime" placeholder="0" min="0" onkeypress="manejarEnter(event, 'burstTime')">
+            </div>
+            <div class="form-group">
+                <label>Tiempo CPU (ms):</label>
+                <input type="number" id="burstTime" placeholder="5" min="1" onkeypress="manejarEnterAgregar(event)">
+            </div>
+            <button onclick="agregarProceso()">➕ Agregar Proceso</button>
+            <button onclick="calcularFIFO()">▶️ Ejecutar FIFO</button>
+            <button onclick="limpiar()">🗑️ Limpiar</button>
+        </div>
+
+        <!-- Tabla de procesos -->
+        <div class="results-section">
+            <h2>Procesos Ingresados</h2>
+            <div id="processTable"></div>
+        </div>
+
+        <!-- Diagrama de Gantt -->
+        <div class="gantt-section">
+            <h2>Diagrama de Gantt</h2>
+            <div id="ganttChart"></div>
+        </div>
+
+        <!-- Métricas -->
+        <div class="metrics-section">
+            <h2>Métricas del Sistema</h2>
+            <div id="metrics"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
